@@ -32,6 +32,8 @@
             v-model="loginForm.password"
             placeholder="请输入密码"
             prefix-icon="el-icon-lock"
+            show-password
+            autocomplete="off"
           ></el-input>
         </el-form-item>
         <!-- 验证码 -->
@@ -92,12 +94,18 @@
     <div class="right">
       <img src="@/assets/login_bg.png" alt="" />
     </div>
+    <register ref="registerRef" />
   </div>
 </template>
 
 <script>
 import { saveToken } from '../../utils/token'
+import Register from './Register'
 export default {
+  name:'Login',
+  components: {
+    Register
+  },
   data () {
     return {
       loginForm: {
@@ -137,7 +145,7 @@ export default {
           {
             validator: (rule, value, callback) => {
               if (!this.isCheckBox) {
-                 // return 阻止代码继续往下执行
+                // return 阻止代码继续往下执行
                 return callback(new Error('请勾选是否同意的协议'))
               }
               // 成功回调一下
@@ -166,10 +174,10 @@ export default {
         if (res.code == 200) {
           saveToken(res.data.token)
           this.$message({
-            code: '登录成功',
+            message: '登录成功',
             type: 'success'
           })
-            // 跳转
+          // 跳转
           this.$router.push('/layout')
         } else {
           this.$message.error(res.message)
@@ -177,8 +185,10 @@ export default {
         }
       })
     },
-    register () {}
-  }    
+    register () {
+      this.$refs.registerRef.dialogVisible = true
+    }
+  }
 }
 </script>
 
